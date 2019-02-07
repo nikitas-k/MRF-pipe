@@ -4,6 +4,8 @@
 
 ## look for MRF dicoms
 
+shopt -s nocasematch
+
 rawdir=$1
 dir=$2
 mkdir -p ${dir}/MRF_images
@@ -15,12 +17,12 @@ for subj in $( ls $rawdir | sort -V ); do
 	mkdir -p ${subj}
 	i=1
 	for file in $( ls ${rawdir}/${subj} | sort -V ); do
-		if grep -q -i "mrf" "$file" && grep -q -i "t1" "$file"; then ## T1 map
+		if [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"t1".* ]]; then ## T1 map
 			mrconvert $file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
 			i=$((i+1))
 			continue
 		
-		elif grep -q -i "mrf" "$file" && grep -q -i "t1" "$file" && grep -q -i "offset" "$file"; then ## T1 map offset
+		elif [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"t1".* ]] && [[ $file =~ .*"offset".* "$file"; then ## T1 map offset
 			mrconvert $file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
 			i=$((i+1))
 			continue
