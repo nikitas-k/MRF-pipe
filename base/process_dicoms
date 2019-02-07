@@ -12,11 +12,11 @@ wd=${dir}/MRF_images
 cd $wd
 
 for subj in $( ls $rawdir | sort -V ); do
-	mkdir -p ${wd}/${subj}
+	mkdir -p ${subj}
 	i = 1
-	for file in $( ls $subj | sort -V ); do
+	for file in $( ls ${rawdir}/${subj} | sort -V ); do
 		if [[ $file =~ /.*mrf.*/i ]] && [[ $file =~ /.*t1.*/i ]]; then ## T1 map
-			mrconvert $file ${wd}/${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
+			mrconvert $file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
 			i=$((i+1))
 			continue
 		
