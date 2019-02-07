@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Usage: process_dicoms rawdir dir
+## Usage: process_dicoms rawdir dir type
 
 ## look for MRF dicoms
 
@@ -8,6 +8,7 @@ shopt -s nocasematch
 
 rawdir=$1
 dir=$2
+type=$3
 mkdir -p ${dir}/MRF_images
 wd=${dir}/MRF_images
 
@@ -17,13 +18,13 @@ for subj in $( ls $rawdir | sort -V ); do
 	mkdir -p ${subj}
 	i=1
 	for file in $( ls ${rawdir}/${subj} | sort -V ); do
-		if [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"t1".* ]] && [[ ! $file =~ .*"masked".* ]]; then ## T1 map
-			mrconvert ${rawdir}/${subj}/$file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force -quiet
+		if [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"$type".* ]] && [[ ! $file =~ .*"masked".* ]]; then ## T1 map
+			mrconvert ${rawdir}/${subj}/$file ${subj}/${type}_temp_map_${i}.nii -nthreads 0 -force -quiet
 			i=$((i+1))
 			continue
 		
-		elif [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"t1".* ]] && [[ $file =~ .*"offset".* ]] && [[ ! $file =~ .*"masked".* ]]; then ## T1 map offset
-			mrconvert ${rawdir}/${subj}/$file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force -quiet
+		elif [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"$type".* ]] && [[ $file =~ .*"offset".* ]] && [[ ! $file =~ .*"masked".* ]]; then ## T1 map offset
+			mrconvert ${rawdir}/${subj}/$file ${subj}/${type}_temp_map_${i}.nii -nthreads 0 -force -quiet
 			i=$((i+1))
 			continue
 		
@@ -32,15 +33,15 @@ for subj in $( ls $rawdir | sort -V ); do
 
 	## check if offset
 	if [[ ! -f T1_temp_map_3.nii ]]; then
-		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_map.nii -nthreads 0 -force -quiet
+		mrcat ${subj}/T1_temp_map_2.nii ${subj}/${type}_temp_map_1.nii ${subj}/${type}_map.nii -nthreads 0 -force -quiet
 
 	else
 
-		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force -quiet
+		mrcat ${subj}/${type}_temp_map_2.nii ${subj}/$[type}_temp_map_1.nii ${subj}/${type}_temp_1.nii -nthreads 0 -force -quiet
 
-		mrcat ${subj}/T1_temp_map_4.nii ${subj}/T1_temp_map_3.nii ${subj}/T1_temp_2.nii -nthreads 0 -force -quiet
+		mrcat ${subj}/${type}_temp_map_4.nii ${subj}/${type}_temp_map_3.nii ${subj}/$[type}_temp_2.nii -nthreads 0 -force -quiet
 
-		fslmaths ${subj}/T1_temp_1.nii -add ${subj}/T1_temp_2.nii ${subj}/T1_map.nii
+		fslmaths ${subj}/${type}_temp_1.nii -add ${subj}/${type}_temp_2.nii ${subj}/${type}_map.nii
 	fi
 	rm -rf ${subj}/*temp*
 
