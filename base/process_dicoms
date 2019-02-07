@@ -15,13 +15,13 @@ for subj in $( ls $rawdir | sort -V ); do
 	mkdir -p ${subj}
 	i = 1
 	for file in $( ls ${rawdir}/${subj} | sort -V ); do
-		if [[ $file =~ /.*mrf.*/i ]] && [[ $file =~ /.*t1.*/i ]]; then ## T1 map
+		if [[ "$file" =~ \(*mrf*\) ]] && [[ "$file" =~ \(*t1*\) ]]; then ## T1 map
 			mrconvert $file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
 			i=$((i+1))
 			continue
 		
-		elif [[ $file =~ /.*mrf.*/i ]] && [[ $file =~ /.*t1.*/i ]] && [[ $file =~ /.*offset*/i ]]; then ## T1 map offset
-			mrconvert $file ${wd}/${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
+		elif [[ "$file" =~ \(*mrf*\) ]] && [[ "$file" =~ \(*t1*\) ]] && [[ "$file" =~ \(*offset*\) ]]; then ## T1 map offset
+			mrconvert $file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
 			i=$((i+1))
 			continue
 		
