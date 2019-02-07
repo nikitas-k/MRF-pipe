@@ -27,10 +27,20 @@ for subj in $( ls $rawdir | sort -V ); do
 		
 		fi
 	done
-	mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force
-	mrcat ${subj}/T1_temp_map_4.nii ${subj}/T1_temp_map_3.nii ${subj}/T1_temp_2.nii -nthreads 0 -force
-	fslmaths ${subj}/T1_temp_1.nii -add ${subj}/T1_temp_2.nii ${subj}/T1_map.nii
+
+	## check if offset
+	if [[ ! -f T1_temp_map_3.nii ]]; then
+		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force
+
+	else
+
+		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force
+
+		mrcat ${subj}/T1_temp_map_4.nii ${subj}/T1_temp_map_3.nii ${subj}/T1_temp_2.nii -nthreads 0 -force
+
+		fslmaths ${subj}/T1_temp_1.nii -add ${subj}/T1_temp_2.nii ${subj}/T1_map.nii
 	rm -rf *temp*
+	fi
 
 done
 
