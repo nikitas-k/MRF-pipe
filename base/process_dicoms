@@ -1,0 +1,37 @@
+#!/bin/bash
+
+## Usage: process_dicoms rawdir dir
+
+## look for MRF dicoms
+
+rawdir=$1
+dir=$2
+wd=${dir}/MRF_images
+
+cd $rawdir
+
+for subj in $( ls $rawdir | sort -V ); do
+	mkdir -p ${wd}/${subj}
+	i = 1
+	for file in $( ls $subj | sort -V ); do
+		if [[ $file =~ /.*mrf.*/i ]] && [[ $file =~ /.*t1.*/i ]]; then ## T1 map
+			mrconvert $file ${wd}/${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
+			i=$((i+1))
+			continue
+		
+		elif [[ $file =~ /.*mrf.*/i ]] && [[ $file =~ /.*t1.*/i ]] && [[ $file =~ /.*offset*/i ]]; then ## T1 map offset
+			mrconvert $file ${wd}/${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
+			i=$((i+1))
+			continue
+		
+		fi
+	done
+	mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force
+	mrcat ${subj}/T1_temp_map_4.nii ${subj}/T1_temp_map_3.nii ${subj}/T1_temp_2.nii -nthreads 0 -force
+	fslmaths ${subj}/T1_temp_1.nii -add ${subj}/T1_temp_2.nii ${subj}/T1_map.nii
+	rm -rf *temp*
+
+done
+
+			
+	
