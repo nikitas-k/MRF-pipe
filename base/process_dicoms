@@ -18,12 +18,12 @@ for subj in $( ls $rawdir | sort -V ); do
 	i=1
 	for file in $( ls ${rawdir}/${subj} | sort -V ); do
 		if [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"t1".* ]] && [[ ! $file =~ .*"masked".* ]]; then ## T1 map
-			mrconvert ${file} ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
+			mrconvert ${rawdir}/${subj}/$file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force -quiet
 			i=$((i+1))
 			continue
 		
 		elif [[ $file =~ .*"mrf".* ]] && [[ $file =~ .*"t1".* ]] && [[ $file =~ .*"offset".* ]] && [[ ! $file =~ .*"masked".* ]]; then ## T1 map offset
-			mrconvert ${file} ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force
+			mrconvert ${rawdir}/${subj}/$file ${subj}/T1_temp_map_${i}.nii -nthreads 0 -force -quiet
 			i=$((i+1))
 			continue
 		
@@ -32,13 +32,13 @@ for subj in $( ls $rawdir | sort -V ); do
 
 	## check if offset
 	if [[ ! -f T1_temp_map_3.nii ]]; then
-		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force
+		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force -quiet
 
 	else
 
-		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force
+		mrcat ${subj}/T1_temp_map_2.nii ${subj}/T1_temp_map_1.nii ${subj}/T1_temp_1.nii -nthreads 0 -force -quiet
 
-		mrcat ${subj}/T1_temp_map_4.nii ${subj}/T1_temp_map_3.nii ${subj}/T1_temp_2.nii -nthreads 0 -force
+		mrcat ${subj}/T1_temp_map_4.nii ${subj}/T1_temp_map_3.nii ${subj}/T1_temp_2.nii -nthreads 0 -force -quiet
 
 		fslmaths ${subj}/T1_temp_1.nii -add ${subj}/T1_temp_2.nii ${subj}/T1_map.nii
 	fi
