@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Usage: process_dicoms rawdir dir type
+## Usage: process_dicoms rawdir dir type (t1, t2, b1, m0)
 
 ## look for MRF dicoms
 
