@@ -6,9 +6,10 @@
 
 rawdir=$1
 dir=$2
+mkdir -p ${dir}/MRF_images
 wd=${dir}/MRF_images
 
-cd $rawdir
+cd $wd
 
 for subj in $( ls $rawdir | sort -V ); do
 	mkdir -p ${wd}/${subj}
