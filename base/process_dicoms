@@ -32,8 +32,8 @@ for subj in $( ls $rawdir | sort -V ); do
 	done
 
 	## check if offset
-	if [[ ! -f T1_temp_map_3.nii ]]; then
-		mrcat ${subj}/T1_temp_map_2.nii ${subj}/${type}_temp_map_1.nii ${subj}/${type}_map.nii -nthreads 0 -force -quiet
+	if [[ ! -f ${type}_temp_map_3.nii ]]; then
+		mrcat ${subj}/${type}_temp_map_2.nii ${subj}/${type}_temp_map_1.nii ${subj}/${type}_map.nii -nthreads 0 -force -quiet
 
 	else
 
